@@ -42,6 +42,12 @@ const App = () => {
     setEditUserId(user._id);
   };
 
+  // Delete a user
+  const deleteUser = async (id) => {
+    await axios.delete(`http://localhost:3000/users/${id}`);
+    fetchUsers();
+  };
+  
   return (
     <div style={{ padding: '20px' }}>
       <h1>User Management</h1>
@@ -77,6 +83,7 @@ const App = () => {
               <td>{user.email}</td>
               <td>
                 <button onClick={() => editUser(user)}>Edit</button>
+                <button onClick={() => deleteUser(user)}>Delete</button>
                
               </td>
             </tr>

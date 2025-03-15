@@ -30,15 +30,18 @@ app.get('/', (req, res) => {
     res.send('Welcome to the User Management API!');
   });
 
-app.post('/user', async (req, res) => {
+app.post('/users', async (req, res) => {
+    const { name, email } = req.body;
+    if (!name || !email) {
+      return res.status(400).json({ error: 'Name and email are required' });
+    }
     try {
-        const { name, email } = req.body;
-        const newUser = new User({ name, email });
-        await newUser.save();
-        res.status(201).json(newUser);
-      } catch (err) {
-        res.status(400).json({ error: err.message });
-      }
+      const newUser = new User({ name, email });
+      await newUser.save();
+      res.status(201).json(newUser);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
 });
 
 app.get('/users', async (req, res) => {

@@ -9,8 +9,12 @@ const App = () => {
 
   // Fetch all users
   const fetchUsers = async () => {
-    const response = await axios.get('http://localhost:3000/users');
-    setUsers(response.data);
+    try {
+      const response = await axios.get('http://localhost:3000/users');
+      setUsers(response.data);
+    } catch (err) {
+      console.error('Failed to fetch users:', err);
+    }
   };
 
   useEffect(() => {
@@ -20,20 +24,23 @@ const App = () => {
   // Add or Update a user
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (editUserId) {
-      // Update user
-      await axios.put(`http://localhost:3000/users/${editUserId}`, { name, email });
-      setEditUserId(null);
-    } else {
-      // Add user
-      await axios.post('http://localhost:3000/users', { name, email });
+    try {
+      if (editUserId) {
+        // Update user
+        await axios.put(`http://localhost:3000/users/${editUserId}`, { name, email });
+        setEditUserId(null);
+      } else {
+        // Add user
+        await axios.post('http://localhost:3000/users', { name, email });
+      }
+      setName('');
+      setEmail('');
+      fetchUsers();
+    } catch (err) {
+      console.error('Error saving user:', err);
+      alert('Failed to save user. Please check the console for details.');
     }
-    setName('');
-    setEmail('');
-    fetchUsers();
   };
-
-  
 
   // Edit a user
   const editUser = (user) => {
@@ -44,10 +51,15 @@ const App = () => {
 
   // Delete a user
   const deleteUser = async (id) => {
-    await axios.delete(`http://localhost:3000/users/${id}`);
-    fetchUsers();
+    try {
+      await axios.delete(`http://localhost:3000/users/${id}`);
+      fetchUsers();
+    } catch (err) {
+      console.error('Error deleting user:', err);
+      alert('Failed to delete user. Please check the console for details.');
+    }
   };
-  
+
   return (
     <div style={{ padding: '20px' }}>
       <h1>User Management</h1>
@@ -83,8 +95,7 @@ const App = () => {
               <td>{user.email}</td>
               <td>
                 <button onClick={() => editUser(user)}>Edit</button>
-                <button onClick={() => deleteUser(user)}>Delete</button>
-               
+                <button onClick={() => deleteUser(user._id)}>Delete</button>
               </td>
             </tr>
           ))}

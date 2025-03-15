@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './App.css'; // Import the updated CSS
 
 const App = () => {
   const [users, setUsers] = useState([]);
@@ -61,7 +62,7 @@ const App = () => {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div className="App">
       <h1>User Management</h1>
       <form onSubmit={handleSubmit}>
         <input
@@ -80,7 +81,7 @@ const App = () => {
         />
         <button type="submit">{editUserId ? 'Update' : 'Add'} User</button>
       </form>
-      <table border="1" style={{ width: '100%', marginTop: '20px' }}>
+      <table>
         <thead>
           <tr>
             <th>Name</th>
@@ -93,7 +94,7 @@ const App = () => {
             <tr key={user._id}>
               <td>{user.name}</td>
               <td>{user.email}</td>
-              <td>
+              <td className="actions">
                 <button onClick={() => editUser(user)}>Edit</button>
                 <button onClick={() => deleteUser(user._id)}>Delete</button>
               </td>
